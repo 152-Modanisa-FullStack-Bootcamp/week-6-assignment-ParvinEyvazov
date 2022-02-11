@@ -13,7 +13,7 @@ func main() {
 	service := service.NewService()
 	handler := handler.NewHandler(service)
 
-	http.HandleFunc("/", handler.Users)
+	http.HandleFunc("/", handler.Gateway)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
