@@ -1,8 +1,8 @@
 package service
 
 import (
-	"bootcamp/hmw6/data"
 	"bootcamp/hmw6/model"
+	"bootcamp/hmw6/repository"
 	"errors"
 )
 
@@ -12,14 +12,15 @@ type IService interface {
 }
 
 type Service struct {
+	repository repository.IRepository
 }
 
-func (*Service) Users() (model.Users, error) {
-	return data.GetUsers(), nil
+func (s *Service) Users() (model.Users, error) {
+	return s.repository.GetUsers(), nil
 }
 
-func (*Service) UserBalance(username string) (float64, error) {
-	balance, ok := data.GetUserBalance(username)
+func (s *Service) UserBalance(username string) (float64, error) {
+	balance, ok := s.repository.GetUserBalance(username)
 	if !ok {
 		return balance, errors.New("undefined user")
 	}
@@ -27,6 +28,6 @@ func (*Service) UserBalance(username string) (float64, error) {
 	return balance, nil
 }
 
-func NewService() IService {
-	return &Service{}
+func NewService(repository repository.IRepository) IService {
+	return &Service{repository: repository}
 }
