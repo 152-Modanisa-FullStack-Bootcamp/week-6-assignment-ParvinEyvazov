@@ -24,13 +24,13 @@ func (h *Handler) Gateway(w http.ResponseWriter, r *http.Request) {
 	username := getUsername(r.URL.Path)
 
 	switch {
-	case username == "" && r.Method == "GET":
+	case username == "" && r.Method == http.MethodGet:
 		h.GetUsers(w, r)
-	case r.Method == "GET":
+	case r.Method == http.MethodGet:
 		h.GetBalance(w, r)
-	case r.Method == "PUT":
-		fmt.Println("PUT balance")
-	case r.Method == "POST":
+	case r.Method == http.MethodPut:
+		h.CreateUser(w, r)
+	case r.Method == http.MethodPost:
 		fmt.Println("POST balance")
 	default:
 		undefinedEndpointError(&w)
@@ -38,7 +38,7 @@ func (h *Handler) Gateway(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := h.service.Users()
+	users, err := h.service.GetUsers()
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Error"))
@@ -51,9 +51,22 @@ func (h *Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	username := getUsername(r.URL.Path)
 
-	balance, err := h.service.UserBalance(username)
+	balance, err := h.service.GetUserBalance(username)
 	if err != nil {
 		notFoundError(&w)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(balance)
+}
+
+func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	username := getUsername(r.URL.Path)
+
+	balance, err := h.service.CreateUser(username)
+	if err != nil {
+		serverError(&w)
 		return
 	}
 
@@ -78,6 +91,14 @@ func notFoundError(w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Type", "application/json")
 	json.NewEncoder(*w).Encode(ErrorResponse{
 		Err: "Not found",
+	})
+}
+
+func serverError(w *http.ResponseWriter) {
+	(*w).WriteHeader(http.StatusInternalServerError)
+	(*w).Header().Set("Content-Type", "application/json")
+	json.NewEncoder(*w).Encode(ErrorResponse{
+		Err: "Server error",
 	})
 }
 

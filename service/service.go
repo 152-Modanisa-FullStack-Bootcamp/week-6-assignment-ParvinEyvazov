@@ -7,22 +7,32 @@ import (
 )
 
 type IService interface {
-	Users() (model.Users, error)
-	UserBalance(username string) (float64, error)
+	GetUsers() (model.Users, error)
+	GetUserBalance(username string) (float64, error)
+	CreateUser(username string) (float64, error)
 }
 
 type Service struct {
 	repository repository.IRepository
 }
 
-func (s *Service) Users() (model.Users, error) {
+func (s *Service) GetUsers() (model.Users, error) {
 	return s.repository.GetUsers(), nil
 }
 
-func (s *Service) UserBalance(username string) (float64, error) {
+func (s *Service) GetUserBalance(username string) (float64, error) {
 	balance, ok := s.repository.GetUserBalance(username)
 	if !ok {
 		return balance, errors.New("undefined user")
+	}
+
+	return balance, nil
+}
+
+func (s *Service) CreateUser(username string) (float64, error) {
+	balance, err := s.repository.UpdateUserBalance(username)
+	if err != nil {
+		return balance, err
 	}
 
 	return balance, nil

@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	InitialBalance int     `json:"initialBalanceAmount"`
+	InitialBalance float64 `json:"initialBalanceAmount"`
 	MinumumBalance float64 `json:"minimumBalanceAmount"`
 }
 
