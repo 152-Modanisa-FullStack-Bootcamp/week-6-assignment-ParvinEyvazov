@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bootcamp/hmw6/config"
 	"bootcamp/hmw6/model"
 	"bootcamp/hmw6/repository"
 	"errors"
@@ -30,9 +31,9 @@ func (s *Service) GetUserBalance(username string) (float64, error) {
 }
 
 func (s *Service) CreateUser(username string) (float64, error) {
-	balance, err := s.repository.UpdateUserBalance(username)
-	if err != nil {
-		return balance, err
+	balance, ok := s.repository.GetUserBalance(username)
+	if !ok {
+		return s.repository.UpdateUserBalance(username, config.C.InitialBalance)
 	}
 
 	return balance, nil

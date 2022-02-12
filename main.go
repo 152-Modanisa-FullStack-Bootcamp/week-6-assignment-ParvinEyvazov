@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "bootcamp/hmw6/config"
 	"bootcamp/hmw6/handler"
 	"bootcamp/hmw6/repository"
 	"bootcamp/hmw6/service"

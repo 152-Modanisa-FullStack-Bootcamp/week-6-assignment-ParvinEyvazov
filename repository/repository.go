@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bootcamp/hmw6/config"
 	"bootcamp/hmw6/model"
 )
 
@@ -12,7 +11,7 @@ var Users model.Users = map[string]float64{
 type IRepository interface {
 	GetUsers() model.Users
 	GetUserBalance(username string) (balance float64, ok bool)
-	UpdateUserBalance(username string) (balance float64, err error)
+	UpdateUserBalance(username string, new_balance float64) (balance float64, err error)
 }
 
 type MemoryRepository struct {
@@ -27,16 +26,10 @@ func (*MemoryRepository) GetUserBalance(username string) (balance float64, ok bo
 	return
 }
 
-func (*MemoryRepository) UpdateUserBalance(username string) (balance float64, err error) {
+func (*MemoryRepository) UpdateUserBalance(username string, new_balance float64) (balance float64, err error) {
+	Users[username] = new_balance
 
-	balance, ok := Users[username]
-
-	if !ok {
-		Users[username] = config.C.InitialBalance
-		return Users[username], nil
-	}
-
-	return balance, nil
+	return new_balance, nil
 }
 
 func NewRepository() IRepository {
