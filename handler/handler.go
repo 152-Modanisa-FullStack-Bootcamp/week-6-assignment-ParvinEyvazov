@@ -10,6 +10,10 @@ import (
 
 type IHandler interface {
 	Gateway(w http.ResponseWriter, r *http.Request)
+	GetUsers(w http.ResponseWriter, r *http.Request)
+	GetBalance(w http.ResponseWriter, r *http.Request)
+	CreateUser(w http.ResponseWriter, r *http.Request)
+	UpdateUser(w http.ResponseWriter, r *http.Request)
 }
 
 type Handler struct {
@@ -77,7 +81,6 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	username := getUsername(r.URL.Path)
-	_ = username
 
 	bs := make([]byte, r.ContentLength)
 	r.Body.Read(bs)
