@@ -11,7 +11,8 @@ var Users model.Users = map[string]float64{
 type IRepository interface {
 	GetUsers() model.Users
 	GetUserBalance(username string) (balance float64, ok bool)
-	UpdateUserBalance(username string, new_balance float64) (balance float64, err error)
+	CreateUser(username string, new_balance float64) (balance float64, err error)
+	UpdateBalance(username string, new_balance float64) (balance float64, err error)
 }
 
 type MemoryRepository struct {
@@ -26,7 +27,13 @@ func (*MemoryRepository) GetUserBalance(username string) (balance float64, ok bo
 	return
 }
 
-func (*MemoryRepository) UpdateUserBalance(username string, new_balance float64) (balance float64, err error) {
+func (*MemoryRepository) CreateUser(username string, new_balance float64) (balance float64, err error) {
+	Users[username] = new_balance
+
+	return new_balance, nil
+}
+
+func (*MemoryRepository) UpdateBalance(username string, new_balance float64) (balance float64, err error) {
 	Users[username] = new_balance
 
 	return new_balance, nil
