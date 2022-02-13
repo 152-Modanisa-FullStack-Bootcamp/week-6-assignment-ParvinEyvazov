@@ -11,22 +11,44 @@ type Config struct {
 	MinumumBalance float64 `json:"minimumBalanceAmount"`
 }
 
-var C = &Config{}
+var c = &Config{}
 
 func init() {
-	file, err := os.Open(".config/local.json")
-	handleErr(err)
-	defer file.Close()
+	/*
+		file, err := os.Open(".config/local.json")
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
 
-	read, err := io.ReadAll(file)
-	handleErr(err)
+		read, err := io.ReadAll(file)
+		if err != nil {
+			panic(err)
+		}
 
-	err = json.Unmarshal(read, C)
-	handleErr(err)
+		err = json.Unmarshal(read, c)
+		if err != nil {
+			panic(err)
+		}
+	*/
 }
 
-func handleErr(err error) {
+func Get() *Config {
+	file, err := os.Open(".config/local.json")
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
+
+	read, err := io.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+
+	err = json.Unmarshal(read, c)
+	if err != nil {
+		panic(err)
+	}
+
+	return c
 }

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"bootcamp/hmw6/handler"
-	"bootcamp/hmw6/repository"
-	"bootcamp/hmw6/service"
+	"bank/config"
+	"bank/handler"
+	"bank/repository"
+	"bank/service"
 	"fmt"
 	"net/http"
 )
@@ -11,7 +12,9 @@ import (
 func main() {
 
 	repository := repository.NewRepository()
-	service := service.NewService(repository)
+	conf := config.Get()
+
+	service := service.NewService(repository, *conf)
 	handler := handler.NewHandler(service)
 
 	http.HandleFunc("/", handler.Gateway)

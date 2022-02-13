@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"bootcamp/hmw6/model"
+	"bank/model"
 )
 
 var Users model.Users = map[string]float64{

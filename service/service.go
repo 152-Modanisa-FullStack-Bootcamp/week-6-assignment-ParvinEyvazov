@@ -1,9 +1,9 @@
 package service
 
 import (
-	"bootcamp/hmw6/config"
-	"bootcamp/hmw6/model"
-	"bootcamp/hmw6/repository"
+	"bank/config"
+	"bank/model"
+	"bank/repository"
 	"errors"
 )
 
@@ -16,6 +16,7 @@ type IService interface {
 
 type Service struct {
 	repository repository.IRepository
+	config     config.Config
 }
 
 func (s *Service) GetUsers() (model.Users, error) {
@@ -34,7 +35,7 @@ func (s *Service) GetUserBalance(username string) (float64, error) {
 func (s *Service) CreateUser(username string) (float64, error) {
 	balance, ok := s.repository.GetUserBalance(username)
 	if !ok {
-		return s.repository.CreateUser(username, config.C.InitialBalance)
+		return s.repository.CreateUser(username, s.config.InitialBalance)
 	}
 
 	return balance, nil
@@ -46,7 +47,7 @@ func (s *Service) UpdateBalance(username string, updateData model.UpdateBalanceB
 		return balance, errors.New("undefined user")
 	}
 
-	if (balance + updateData.Balance) < config.C.MinumumBalance {
+	if (balance + updateData.Balance) < s.config.MinumumBalance {
 		return balance, errors.New("invalid operation")
 	}
 
@@ -59,6 +60,6 @@ func (s *Service) UpdateBalance(username string, updateData model.UpdateBalanceB
 	return balance, nil
 }
 
-func NewService(repository repository.IRepository) IService {
-	return &Service{repository: repository}
+func NewService(repository repository.IRepository, config config.Config) IService {
+	return &Service{repository: repository, config: config}
 }

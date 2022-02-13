@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"bootcamp/hmw6/model"
-	"bootcamp/hmw6/service"
+	"bank/model"
+	"bank/service"
 	"encoding/json"
 	"net/http"
 	"strings"
