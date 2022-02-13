@@ -21,6 +21,22 @@ var conf config.Config = config.Config{
 	MinumumBalance: -100,
 }
 
+func Test_Gateway(t *testing.T) {
+	mockController := gomock.NewController(t)
+	mockService := mock.NewMockIService(mockController)
+
+	t.Run("Undefined endpoint => DELETE", func(t *testing.T) {
+		handler := handler.NewHandler(mockService)
+
+		res := httptest.NewRecorder()
+		req := httptest.NewRequest(http.MethodDelete, "/", http.NoBody)
+
+		handler.Gateway(res, req)
+		assert.Equal(t, http.StatusBadRequest, res.Result().StatusCode)
+	})
+
+}
+
 func Test_GetUsers(t *testing.T) {
 
 	mockController := gomock.NewController(t)

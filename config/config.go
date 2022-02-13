@@ -34,17 +34,20 @@ func init() {
 }
 
 func Get() *Config {
+	// read as file
 	file, err := os.Open(".config/local.json")
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
 
+	// convert to byte[]
 	read, err := io.ReadAll(file)
 	if err != nil {
 		panic(err)
 	}
 
+	// convert byte[] to struct
 	err = json.Unmarshal(read, c)
 	if err != nil {
 		panic(err)

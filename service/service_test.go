@@ -5,6 +5,7 @@ import (
 	mock "bank/mock"
 	"bank/model"
 	"bank/service"
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -155,6 +156,27 @@ func Test_UpdateBalance(t *testing.T) {
 		balance, err := service.UpdateBalance(mock_username, mock_updateData)
 
 		assert.Equal(t, mock_balance, balance)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("Problem on updating", func(t *testing.T) {
+		mock_balance = 100
+		mockRepository.
+			EXPECT().
+			GetUserBalance(mock_username).
+			Return(mock_balance, true).
+			Times(1)
+
+		mockRepository.
+			EXPECT().
+			UpdateBalance(mock_username, mock_balance+mock_updateData.Balance).
+			Return(0.0, errors.New("error on updating")).
+			Times(1)
+
+		service := service.NewService(mockRepository, conf)
+		balance, err := service.UpdateBalance(mock_username, mock_updateData)
+
+		assert.Equal(t, 0.0, balance)
 		assert.NotNil(t, err)
 	})
 
